@@ -1,7 +1,6 @@
 #include <iostream>
 #include <chrono>
 #include <vector>
-#include <map>
 #include <future>
 
 #include "quadgram_analysis.h"
