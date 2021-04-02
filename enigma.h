@@ -194,8 +194,20 @@ void EnigmaText::cryptanalysis(){
 				
 				if((old_text_score_result.size() > 3) 
 					&& (old_text_score_result.at(old_text_score_result.size()-1) == old_text_score_result.at(old_text_score_result.size()-2)) 
-					&& (old_text_score_result.at(old_text_score_result.size()-1) == old_text_score_result.at(old_text_score_result.size()-3))) 
+					&& (old_text_score_result.at(old_text_score_result.size()-1) == old_text_score_result.at(old_text_score_result.size()-3))) {
+						//reassign rotor settings
+						rotor_one.input_character[0] = key[0];
+						rotor_two.input_character[0] = key[1];
+						rotor_three.input_character[0] = key[2];
+						
+						//reassign ring settings
+						rotor_one.output_character[0] = ring_setting[0];
+						rotor_two.output_character[0] = ring_setting[1];
+						rotor_three.output_character[0] = ring_setting[2];
+						
 						return; 
+					}
+						
 			}	
 		}
 	}
