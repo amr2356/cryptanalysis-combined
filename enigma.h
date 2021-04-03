@@ -1,8 +1,10 @@
 //Project:Enigma
 //Free for Distribution and use
 #include <iostream>
+#include <vector>
 #include <string>
 #include <cstring>
+#include <algorithm>
 
 using namespace std;
 
