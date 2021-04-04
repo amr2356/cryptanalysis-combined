@@ -60,9 +60,10 @@ public:
 	void read_decrypted() {cin >> decrypted; encrypted=decrypted; length=decrypted.length();}
 	void read_encrypted() {cin >> encrypted; decrypted=encrypted; length=encrypted.length();}
 	short rotor_direction_output(const short input_output_char_loc);
-	string encryption_decryption(string key, string ring_setting, bool decryption);
-	void encrypt(string key, string ring_setting) {encrypted = encryption_decryption(key, ring_setting, false);}
-	void decrypt(string key, string ring_setting) {decrypted = encryption_decryption(key, ring_setting, true);}
+	void initialize(string key, string ring_setting);
+	string encryption_decryption(bool decryption);
+	void encrypt(string key, string ring_setting) {initialize(key, ring_setting); encrypted = encryption_decryption(false);}
+	void decrypt(string key, string ring_setting) {initialize(key, ring_setting); decrypted = encryption_decryption(true);}
 	void quadgram_score(size_t l) {score = scoring_via_quadgram(decrypted,l);}
 	void quadgram_score() {score = scoring_via_quadgram(decrypted,length);}
 	string rotor_setting() {string s {rotor_one.input_character[0],rotor_two.input_character[0],rotor_three.input_character[0]}; return s;}
@@ -101,7 +102,8 @@ short EnigmaText::rotor_direction_output(const short input_output_char_loc){
 		
 }
 
-string EnigmaText::encryption_decryption(string key, string ring_setting, bool decryption) {
+
+void EnigmaText::initialize(const string key, const string ring_setting) {
 	
 	short location_on_initialization_array;
 	
@@ -128,6 +130,10 @@ string EnigmaText::encryption_decryption(string key, string ring_setting, bool d
 	//Initialize with ring setting location 
 	location_on_initialization_array = character_location(rotor_three.input_character,key[2]);
 	rotor_shift(rotor_three.input_character,location_on_initialization_array);
+}
+
+
+string EnigmaText::encryption_decryption(const bool decryption) {
 	
 	//Creating Input/Output Array
 	string output_text;
@@ -161,6 +167,7 @@ string EnigmaText::encryption_decryption(string key, string ring_setting, bool d
 	}
 	return output_text;
 }
+
 
 void EnigmaText::cryptanalysis(){
 	
@@ -206,6 +213,7 @@ void EnigmaText::cryptanalysis(){
 						rotor_one.output_character[0] = ring_setting[0];
 						rotor_two.output_character[0] = ring_setting[1];
 						rotor_three.output_character[0] = ring_setting[2];
+						
 						
 						return; 
 					}
