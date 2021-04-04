@@ -5,8 +5,7 @@
 
 #include "quadgram_analysis.h"
 #include "vigenere.h"
-#include "enigma.h"
-
+#include "enigma_plugboard.h"
 
 class Cipher {
 public:
@@ -39,6 +38,7 @@ int main(){
 	std::vector<std::future<Cipher>> cipher_tasks;
 	cipher_tasks.push_back(std::async([&]{return cryptanalysis("Vigenere", VigenereText(input_text));}));
 	cipher_tasks.push_back(std::async([&]{return cryptanalysis("Commercial Enigma", EnigmaText(input_text));}));
+	cipher_tasks.push_back(std::async([&]{return cryptanalysis("Military Enigma", EnigmaPlugboardText(input_text));}));
 	
 	return 0;
 }
