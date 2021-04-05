@@ -130,7 +130,8 @@ vector<int> EnigmaPlugboardText::location_of_best_loc(const int i, const int ign
 		score_known_plaintext(length);
 		initialize(orig_settings[0], orig_settings[1]);
 
-		if(score>=counter && score>28 && j!=ignore){
+		//CHANGE TO ACCEPT DYNAMIC VALUES
+		if(score>=counter && score>(length/5) && j!=ignore){
 			counter = score;
 			//cout<<"The Highest Counter: "<<counter<<" Rotor Setting: "<<rotor_setting()<<" Ring Setting: "<<ring_setting()<<'\n';
 			//cout<<"Potential Plaintext: "<<decrypted<<'\n';
@@ -168,6 +169,8 @@ bool EnigmaPlugboardText::cryptanalysis(){
 	double counter {min_quadgram_score};
 	vector<int> old_text_score_result;
 	
+	vector<string> text_similar;
+	
 	[&] {
 	for(int i=0;i<17576;++i){//Used for Varying Ring Setting
 		
@@ -179,14 +182,16 @@ bool EnigmaPlugboardText::cryptanalysis(){
 			score_known_plaintext(length);
 			if(score>=counter){
 				old_text_score_result.push_back(score);
-				counter = score;
+				text_similar.push_back(decrypted);
 				
-				if((old_text_score_result.size() > 5) 
-					&& (old_text_score_result.at(old_text_score_result.size()-1) == old_text_score_result.at(old_text_score_result.size()-2))
-					&& (old_text_score_result.at(old_text_score_result.size()-1) == old_text_score_result.at(old_text_score_result.size()-3))
-					&& (old_text_score_result.at(old_text_score_result.size()-1) == old_text_score_result.at(old_text_score_result.size()-4)) 
-					&& (old_text_score_result.at(old_text_score_result.size()-1) == old_text_score_result.at(old_text_score_result.size()-5))) {
-
+				counter = score;
+			
+				if((text_similar.size() > 5) 
+					&& (text_similar.at(text_similar.size()-1) == text_similar.at(text_similar.size()-2))
+					&& (text_similar.at(text_similar.size()-1) == text_similar.at(text_similar.size()-3))
+					
+					) {
+						
 						initialize(key, ring_setting);
 						return; 
 					}					
