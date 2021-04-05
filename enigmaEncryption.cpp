@@ -9,7 +9,7 @@ int main()
 {	
 	std::string key, ring_setting; 
 	EnigmaText input;
-	//Input the Text
+	//Input the Key
 	//display();
 	std::cout << "-------------------------Commercial Enigma cipher-------------------------\n";
 	std::cout<<"Please enter your plaintext: ";
@@ -21,7 +21,7 @@ int main()
 	std::cin>>ring_setting;
 	input.encrypt(key,ring_setting);
 	//Display Ciphertext Results
-	std::cout<<"\nKey Setting: "<<key<<'\n';
+	std::cout<<endl<<"Key Setting: "<<key<<'\n';
 	std::cout<<"Ring Setting: "<<ring_setting<<"\n\n";
 	std::cout<<"Output text: "<<input.encrypted<<'\n';
 	
