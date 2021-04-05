@@ -1,12 +1,14 @@
 //Project:Enigma
 //Free for Distribution and use
 
+#include <fstream>
+#include <cstdio>
 #include "enigma.h"
 
 using namespace std;
 
 constexpr short plug_number {10};
-
+const string kptfilename {"knownPlainText.txt"};
 
 string print_plugboard_scores(const vector<vector<int>> &tracking) {
 	string output {""};
@@ -24,16 +26,34 @@ string print_plugboard_scores(const vector<vector<int>> &tracking) {
 class EnigmaPlugboardText : public EnigmaText{
 public:
 	char sub_list[26];
+	string known_plaintext;
 	string plugboard_scores;
-	EnigmaPlugboardText(string t): EnigmaText{t}, sub_list{}, plugboard_scores{} {strncpy(sub_list, alphabet, 26);}
-	EnigmaPlugboardText(): EnigmaText{}, sub_list{}, plugboard_scores{} {strncpy(sub_list, alphabet, 26);}
+	EnigmaPlugboardText(string t): EnigmaText{t}, sub_list{}, known_plaintext{}, plugboard_scores{} {
+		ifstream kptfile(kptfilename);
+		if (kptfile.is_open()) {
+			string line;
+			while ( getline (kptfile,line) ) { known_plaintext = known_plaintext + line; }
+			kptfile.close();
+		}
+		strncpy(sub_list, alphabet, 26);
+	}
+	EnigmaPlugboardText(): EnigmaText{}, sub_list{}, known_plaintext{}, plugboard_scores{} {EnigmaPlugboardText("");}
+	void read_decrypted() {
+		cin >> decrypted;
+		ofstream kptfile(kptfilename);
+		if (kptfile.is_open()) { kptfile << decrypted; kptfile.close(); }
+		else cout << "Unable to open known plaintext file for writing.\n";
+		encrypted=decrypted; 
+		length=decrypted.length();
+	}
 	void read_plugboard();
 	void encrypt(const string key, const string ring_setting); 
 	void plugboard_guess();
 	void score_known_plaintext(size_t l);
 	vector<int> location_of_best_loc(const int i, const int ignore);
-	void cryptanalysis();
-	string settings() { return "Rotor Setting: "+rotor_setting()+"  Ring Setting: "+ring_setting()+plugboard_scores;}
+	bool cryptanalysis();
+	void remove_file() { remove(kptfilename.c_str()); }
+	string settings() { return "Rotor Setting: "+rotor_setting()+"  Ring Setting: "+ring_setting()+"   Score: "+to_string(static_cast<int>(score))+plugboard_scores;}
 };
 
 
@@ -77,10 +97,9 @@ void EnigmaPlugboardText::plugboard_guess(){
 }
 
 void EnigmaPlugboardText::score_known_plaintext(size_t l){
-    string plaintext = "THENAVYISALLCLEARFORTHEDAYITISTWELVEHUNDREDHOURWEAREALLSETFORTHEDAYWEAREMOVINGATASTEADYPACEWILLREACHTARGETINNEXTFEWDAYSWEAREADVICINGAIRFORCEANDARMYTOHELPUSEXPEDITETHEPROCESSBYPERFORMINGDAILYCOLLABORATEDDRILLSATFOURTEENHUNDREDHOURSHAILHITLER";
     score = 0;
     for (int i=0;i<l;++i){
-        if(decrypted[i]==plaintext[i]) ++score;
+        if(decrypted[i]==known_plaintext[i]) ++score;
     }
 }
 
@@ -126,7 +145,9 @@ vector<int> EnigmaPlugboardText::location_of_best_loc(const int i, const int ign
 }
 
 
-void EnigmaPlugboardText::cryptanalysis(){
+bool EnigmaPlugboardText::cryptanalysis(){
+	
+	if (known_plaintext.length() == 0) return false;
 	
 		//Possible Key or Rotor Combination in Array all
 	string all[17576];
@@ -185,8 +206,15 @@ void EnigmaPlugboardText::cryptanalysis(){
 	}
 	decrypted = rr_decrypted;
 	plugboard_scores = print_plugboard_scores(tracking_one)+"\n\n"+print_plugboard_scores(tracking_two);
-	if (plugboard_scores.length() > 2) plugboard_scores = "\n\tPlugboard Settings can be Seen Below, Use Ones with Highest Scores:\n"+plugboard_scores;
-	else plugboard_scores = "\n\tPlugboard Settings Could Not Be Found.";
+	if (plugboard_scores.length() > 2) {
+		plugboard_scores = "\n\tPlugboard Settings can be Seen Below, Use Ones with Highest Scores:\n"+plugboard_scores;
+		remove_file(); //delete known plaintext file if successfully matched
+		return true;
+	}
+	else {
+		plugboard_scores = "\n\tPlugboard Settings Could Not Be Found.";
+		return false;
+	}
 }
 
 

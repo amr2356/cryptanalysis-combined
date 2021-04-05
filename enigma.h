@@ -68,8 +68,8 @@ public:
 	void quadgram_score() {score = scoring_via_quadgram(decrypted,length);}
 	string rotor_setting() {string s {rotor_one.input_character[0],rotor_two.input_character[0],rotor_three.input_character[0]}; return s;}
 	string ring_setting() {string s {rotor_one.output_character[0],rotor_two.output_character[0],rotor_three.output_character[0]}; return s;}
-	void cryptanalysis();
-	string settings() { return "Rotor Setting: "+rotor_setting()+"  Ring Setting: "+ring_setting();}
+	bool cryptanalysis();
+	string settings() { return "Rotor Setting: "+rotor_setting()+"  Ring Setting: "+ring_setting()+"   Score: "+to_string(score);}
 };
 
 short EnigmaText::rotor_direction_output(const short input_output_char_loc){
@@ -169,7 +169,7 @@ string EnigmaText::encryption_decryption(const bool decryption) {
 }
 
 
-void EnigmaText::cryptanalysis(){
+bool EnigmaText::cryptanalysis(){
 	
 		//Possible Key or Rotor Combination in Array all
 	//display();
@@ -215,12 +215,13 @@ void EnigmaText::cryptanalysis(){
 						rotor_three.output_character[0] = ring_setting[2];
 						
 						
-						return; 
+						return true; 
 					}
 						
 			}	
 		}
 	}
+	return false;
 }
 
 
