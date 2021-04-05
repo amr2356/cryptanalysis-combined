@@ -23,21 +23,24 @@ string print_plugboard_scores(const vector<vector<int>> &tracking) {
 	return output;
 }
 
+string read_from_kptfile(const string filename) {
+	string known_plaintext;
+	ifstream kptfile(filename);
+	if (kptfile.is_open()) {
+		string line;
+		while ( getline (kptfile,line) ) { known_plaintext = known_plaintext + line; }
+		kptfile.close();
+	}
+	return known_plaintext;
+}
+
 class EnigmaPlugboardText : public EnigmaText{
 public:
 	char sub_list[26];
 	string known_plaintext;
 	string plugboard_scores;
-	EnigmaPlugboardText(string t): EnigmaText{t}, sub_list{}, known_plaintext{}, plugboard_scores{} {
-		ifstream kptfile(kptfilename);
-		if (kptfile.is_open()) {
-			string line;
-			while ( getline (kptfile,line) ) { known_plaintext = known_plaintext + line; }
-			kptfile.close();
-		}
-		strncpy(sub_list, alphabet, 26);
-	}
-	EnigmaPlugboardText(): EnigmaText{}, sub_list{}, known_plaintext{}, plugboard_scores{} {EnigmaPlugboardText("");}
+	EnigmaPlugboardText(string t): EnigmaText{t}, sub_list{}, known_plaintext{}, plugboard_scores{} {known_plaintext = read_from_kptfile(kptfilename); strncpy(sub_list, alphabet, 26);}
+	EnigmaPlugboardText(): EnigmaText{}, sub_list{}, known_plaintext{}, plugboard_scores{} {known_plaintext = read_from_kptfile(kptfilename); strncpy(sub_list, alphabet, 26);}
 	void read_decrypted() {
 		cin >> decrypted;
 		ofstream kptfile(kptfilename);
