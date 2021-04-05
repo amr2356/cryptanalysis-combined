@@ -3,6 +3,7 @@
 
 #include <fstream>
 #include <cstdio>
+#include <algorithm>
 #include "enigma.h"
 
 using namespace std;
@@ -131,7 +132,7 @@ vector<int> EnigmaPlugboardText::location_of_best_loc(const int i, const int ign
 		initialize(orig_settings[0], orig_settings[1]);
 
 		//CHANGE TO ACCEPT DYNAMIC VALUES
-		if(score>=counter && score>(length/5) && j!=ignore){
+		if(score>=counter && score>min(static_cast<const double>(length/5),28.0) && j!=ignore){
 			counter = score;
 			//cout<<"The Highest Counter: "<<counter<<" Rotor Setting: "<<rotor_setting()<<" Ring Setting: "<<ring_setting()<<'\n';
 			//cout<<"Potential Plaintext: "<<decrypted<<'\n';
