@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <future>
 
+#include "generic_cipher.h"
 
 using namespace std;
 
@@ -171,16 +172,12 @@ string truncate_key (const string key, const int key_len) {
 }
 
 
-class VigenereText {
+class VigenereText : public GenericCipherText{
 public:
-	string encrypted, decrypted, key;
-	size_t length;
-	double score;
-	VigenereText(string t, size_t l): encrypted{key_update(t,l)}, decrypted{key_update(t,l)}, length{l}, key{"AA"}, score{min_quadgram_score} {}
-	VigenereText(string t): encrypted{t}, decrypted{t}, length{t.length()}, key{"AA"}, score{min_quadgram_score} {}
-	VigenereText(): encrypted{}, decrypted{}, length{0}, key{"AA"}, score{min_quadgram_score} {}
-	void read_decrypted() {cin >> decrypted; encrypted=decrypted; length=decrypted.length();}
-	void read_encrypted() {cin >> encrypted; decrypted=encrypted; length=encrypted.length();}
+	string key;
+	VigenereText(string t, size_t l): GenericCipherText{key_update(t,l)}, key{"AA"} {}
+	VigenereText(string t): GenericCipherText{t}, key{"AA"} {}
+	VigenereText(): GenericCipherText{}, key{"AA"} {}
 	void encrypt(string k) {key=k; encrypted = encrypting(decrypted, key);}
 	void encrypt() {cin >> key; encrypted = encrypting(decrypted, key);}
 	void decrypt(string k) {key=k; decrypted = decrypting(encrypted,key);}

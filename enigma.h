@@ -6,6 +6,8 @@
 #include <cstring>
 #include <algorithm>
 
+#include "generic_cipher.h"
+
 using namespace std;
 
 constexpr char alphabet[26] {'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'};
@@ -49,16 +51,11 @@ void rotor_shift(char rotor_input[], const int position){
 }
 
 
-class EnigmaText {
+class EnigmaText : public GenericCipherText{
 public:
-	string encrypted, decrypted;
 	Rotor rotor_one, rotor_two, rotor_three;
-	size_t length;
-	double score;
-	EnigmaText(string t): encrypted{t}, decrypted{t}, rotor_one {rotor_one_cred}, rotor_two {rotor_two_cred}, rotor_three {rotor_three_cred}, length{t.length()}, score{min_quadgram_score} {}
-	EnigmaText(): encrypted{}, decrypted{}, rotor_one {rotor_one_cred}, rotor_two {rotor_two_cred}, rotor_three {rotor_three_cred}, length{0}, score{min_quadgram_score} {}
-	void read_decrypted() {cin >> decrypted; encrypted=decrypted; length=decrypted.length();}
-	void read_encrypted() {cin >> encrypted; decrypted=encrypted; length=encrypted.length();}
+	EnigmaText(string t): GenericCipherText{t}, rotor_one {rotor_one_cred}, rotor_two {rotor_two_cred}, rotor_three {rotor_three_cred} {}
+	EnigmaText(): GenericCipherText{}, rotor_one {rotor_one_cred}, rotor_two {rotor_two_cred}, rotor_three {rotor_three_cred} {}
 	short rotor_direction_output(const short input_output_char_loc);
 	void initialize(string key, string ring_setting);
 	string encryption_decryption(bool decryption);

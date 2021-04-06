@@ -2,8 +2,9 @@
 #include <chrono>
 #include <vector>
 #include <future>
-
 #include "quadgram_analysis.h"
+
+#include "generic_cipher.h"
 #include "vigenere.h"
 #include "enigma_plugboard.h"
 
@@ -38,6 +39,7 @@ int main(){
 	cipher_tasks.push_back(std::async([&]{return cryptanalysis("Vigenere", VigenereText(input_text));}));
 	cipher_tasks.push_back(std::async([&]{return cryptanalysis("Commercial Enigma", EnigmaText(input_text));}));
 	cipher_tasks.push_back(std::async([&]{return cryptanalysis("Military Enigma", EnigmaPlugboardText(input_text));}));
+	//cipher_tasks.push_back(std::async([&]{return cryptanalysis("Nothing", GenericCipherText(input_text));}));
 	
 	return 0;
 }
