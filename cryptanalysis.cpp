@@ -39,7 +39,6 @@ int main(){
 	cipher_tasks.push_back(std::async([&]{return timed_analysis("Vigenere", VigenereText(input_text));}));
 	cipher_tasks.push_back(std::async([&]{return timed_analysis("Commercial Enigma", EnigmaText(input_text));}));
 	cipher_tasks.push_back(std::async([&]{return timed_analysis("Military Enigma", EnigmaPlugboardText(input_text));}));
-	//cipher_tasks.push_back(std::async([&]{return timed_analysis("Nothing", GenericCipherText(input_text));}));
 	
 	return 0;
 }
