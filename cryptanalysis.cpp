@@ -8,6 +8,8 @@
 #include "vigenere.h"
 #include "enigma_plugboard.h"
 
+# Adding a comment here for COMS W4156 Assignment I0.
+
 class Cipher {
 public:
 	std::string decrypted, settings;
